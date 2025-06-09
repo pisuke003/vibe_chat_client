@@ -64,7 +64,7 @@ function Sidebar({ openChat }) {
 
   return (
     <div className="w-full md:w-[30%] px-4 sm:px-5 bg-[#1f1f1f] text-white h-screen border-r border-gray-700 overflow-y-auto">
-      /* Search Input */
+   
       <div className="relative mb-5 w-full max-w-xl mx-auto">
         <input
           type="text"
@@ -76,7 +76,7 @@ function Sidebar({ openChat }) {
         <i className="fa fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-[20px] text-gray-400 pointer-events-none" />
       </div>
 
-      /* User List */
+   
       {filteredUsers?.map((user) => {
         const hasChat = allChats?.some(
           (chat) =>
@@ -93,13 +93,12 @@ function Sidebar({ openChat }) {
             onClick={() => openChatHandler(user._id)}
           >
             <div className="flex items-center justify-between gap-2 flex-wrap">
-              {/* Avatar */}
+           
               <div className="flex-shrink-0 w-[50px] h-[50px] rounded-full bg-red-600 text-white text-[22px] font-bold flex items-center justify-center select-none">
                 {user.firstname?.charAt(0).toUpperCase()}
               
               </div>
-
-              /* User Info */
+\
               <div className="flex-1 px-3 min-w-0">
                 <div className="text-[16px] font-bold truncate">
                   {user.firstname + ' ' + user.lastname}
@@ -107,7 +106,7 @@ function Sidebar({ openChat }) {
                 <div className="text-[12px] text-gray-400 truncate">{user.email}</div>
               </div>
 
-              /* Start Chat Button */
+             
               {!hideStartButton && (
                 <div className="w-[90px] sm:w-[100px] md:w-[120px] flex-shrink-0">
                   <button
