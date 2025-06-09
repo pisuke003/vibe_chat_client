@@ -78,8 +78,8 @@ function ChatArea({ onBack, socket }) {
   }, [allMessages]);
 
   return (
-    <div className="bg-[#2e2e2e] flex flex-col text-white w-full h-[calc(100vh-60px)] md:h-[93vh] md:w-[70%] rounded-none md:rounded-[10px] px-3 py-4 md:p-5 mx-[6px] sm:mx-[10px]">
-      {/* Top Header */}
+    <div className="bg-[#2e2e2e] flex flex-col text-white w-full h-[calc(100vh-60px)] md:h-[93vh]  rounded-none md:rounded-[10px] px-3 py-4 md:p-5 mx-[6px] sm:mx-[10px]">
+     
       <div className="flex items-center justify-between border-b border-gray-600 pb-3 px-1 md:px-[30px] mb-3 md:mb-5">
         {onBack && (
           <button
@@ -91,7 +91,7 @@ function ChatArea({ onBack, socket }) {
           </button>
         )}
         <div className="text-white font-bold flex-1 text-center truncate px-4">
-          {selectedUser.firstname + " " + selectedUser.lastname}
+          {selectedUser.firstname }
         </div>
         <div className="w-20" />
       </div>
