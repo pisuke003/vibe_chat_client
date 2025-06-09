@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-export const URL = 'http://localhost:3000';
+export const URL = 'https://vibe-chat-api.onrender.com';
 
 export const axiosInstance = axios.create({
   baseURL: URL,
