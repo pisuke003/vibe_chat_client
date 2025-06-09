@@ -98,7 +98,7 @@ function Sidebar({ openChat }) {
                 {user.firstname?.charAt(0).toUpperCase()}
               
               </div>
-\
+
               <div className="flex-1 px-3 min-w-0">
                 <div className="text-[16px] font-bold truncate">
                   {user.firstname + ' ' + user.lastname}
