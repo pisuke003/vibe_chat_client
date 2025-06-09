@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import Header from './component/header';
 import Sidebar from './component/sidebar';
 import ChatArea from './component/chat';
@@ -15,32 +15,33 @@ function Home() {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1100);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  // Handle user room join
   useEffect(() => {
     if (user) {
       socket.emit('join-room', user._id);
     }
   }, [user]);
 
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth < 1100;
-      setIsMobile(mobile);
-      if (!mobile) {
-        setIsChatOpen(false); 
-      }
-    };
 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+  const handleResize = useCallback(() => {
+    const isNowMobile = window.innerWidth < 1100;
+    setIsMobile(isNowMobile);
+
+    if (!isNowMobile) {
+      setIsChatOpen(false); 
+    }
   }, []);
 
   useEffect(() => {
-    if (isMobile && selectedChat) {
-      setIsChatOpen(true);
-    }
-    if (!selectedChat) {
-      setIsChatOpen(false); 
-    }
+    window.addEventListener('resize', handleResize);
+    handleResize(); 
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [handleResize]);
+
+
+  useEffect(() => {
+    setIsChatOpen(!!(isMobile && selectedChat));
   }, [selectedChat, isMobile]);
 
   const openChat = (chat) => {
@@ -56,14 +57,20 @@ function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#1f1f1f] text-white">
       <Header />
-      <div className="flex flex-1 w-full p-2">
-        
+
+      <div className="flex flex-1 w-full p-2 overflow-hidden">
+     
         {(!isMobile || !isChatOpen) && (
-          <Sidebar openChat={openChat} />
+          <div className="w-full md:w-[30%] h-full">
+            <Sidebar openChat={openChat} />
+          </div>
         )}
-       
+
+ 
         {selectedChat && (!isMobile || isChatOpen) && (
-          <ChatArea onBack={isMobile ? handleBack : null} socket={socket} />
+          <div className="flex-1 h-full">
+            <ChatArea onBack={isMobile ? handleBack : null} socket={socket} />
+          </div>
         )}
       </div>
     </div>
