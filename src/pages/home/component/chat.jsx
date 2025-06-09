@@ -91,7 +91,7 @@ function ChatArea({ onBack, socket }) {
           </button>
         )}
         <div className="text-white font-bold flex-1 text-center truncate px-4">
-          {selectedUser.firstname }
+          {selectedUser.firstname}
         </div>
         <div className="w-20" />
       </div>
