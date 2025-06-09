@@ -96,7 +96,7 @@ function Sidebar({ openChat }) {
               {/* Avatar */}
               <div className="flex-shrink-0 w-[50px] h-[50px] rounded-full bg-red-600 text-white text-[22px] font-bold flex items-center justify-center select-none">
                 {user.firstname?.charAt(0).toUpperCase()}
-                {user.lastname?.charAt(0).toUpperCase()}
+              
               </div>
 
               /* User Info */
