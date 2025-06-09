@@ -12,7 +12,7 @@ function Home() {
   const dispatch = useDispatch();
   const { selectedChat, user } = useSelector((state) => state.user);
 
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 720);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1100);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
   useEffect(() => {
@@ -23,10 +23,10 @@ function Home() {
 
   useEffect(() => {
     const handleResize = () => {
-      const mobile = window.innerWidth <= 720;
+      const mobile = window.innerWidth < 1100;
       setIsMobile(mobile);
       if (!mobile) {
-        setIsChatOpen(false);
+        setIsChatOpen(false); 
       }
     };
 
@@ -39,7 +39,7 @@ function Home() {
       setIsChatOpen(true);
     }
     if (!selectedChat) {
-      setIsChatOpen(false);
+      setIsChatOpen(false); 
     }
   }, [selectedChat, isMobile]);
 
@@ -57,9 +57,11 @@ function Home() {
     <div className="flex flex-col min-h-screen bg-[#1f1f1f] text-white">
       <Header />
       <div className="flex flex-1 w-full p-2">
+        
         {(!isMobile || !isChatOpen) && (
           <Sidebar openChat={openChat} />
         )}
+       
         {selectedChat && (!isMobile || isChatOpen) && (
           <ChatArea onBack={isMobile ? handleBack : null} socket={socket} />
         )}
