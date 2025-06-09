@@ -8,10 +8,10 @@ import { io } from 'socket.io-client';
 
 const socket = io('https://vibe-chat-api.onrender.com');
 
-
 function Home() {
   const dispatch = useDispatch();
   const { selectedChat, user } = useSelector((state) => state.user);
+
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 720);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -22,7 +22,14 @@ function Home() {
   }, [user]);
 
   useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 720);
+    const handleResize = () => {
+      const mobile = window.innerWidth <= 720;
+      setIsMobile(mobile);
+      if (!mobile) {
+        setIsChatOpen(false);
+      }
+    };
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -49,7 +56,7 @@ function Home() {
   return (
     <div className="flex flex-col min-h-screen bg-[#1f1f1f] text-white">
       <Header />
-      <div className="flex flex-1 w-full p-2 ">
+      <div className="flex flex-1 w-full p-2">
         {(!isMobile || !isChatOpen) && (
           <Sidebar openChat={openChat} />
         )}
