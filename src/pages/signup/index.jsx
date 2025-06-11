@@ -1,12 +1,13 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { signupUser } from './../../apiCalls/auth'; 
+import { signupUser } from './../../apiCalls/auth';
 import toast, { Toaster } from 'react-hot-toast';
 import bgImage from '../../assets/images/bg.jpg';
 
 function Signup() {
   const [user, setUser] = React.useState({
     firstname: '',
+    lastname: '',
     email: '',
     password: '',
   });
@@ -19,7 +20,7 @@ function Signup() {
 
       if (response.success) {
         toast.success('Signup successful!');
-        setUser({ firstname: '', email: '', password: '' });
+        setUser({ firstname: '', lastname: '', email: '', password: '' });
       } else {
         toast.error(response.message || 'Signup failed');
       }
@@ -41,34 +42,40 @@ function Signup() {
       </nav>
 
       <main className="flex-grow flex items-center justify-center px-4 sm:px-6 md:px-12 lg:px-24 py-12">
-          <div
-        className="w-[770px] h-[550px] flex flex-col md:flex-row bg-black/70 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg overflow-hidden"
-        style={{
-          backgroundImage: `url(${bgImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
-          {/* Left side - optional visual */}
+        <div
+          className="w-[770px] h-[550px] flex flex-col md:flex-row bg-black/70 backdrop-blur-md border border-gray-700 rounded-lg shadow-lg overflow-hidden"
+          style={{
+            backgroundImage: `url(${bgImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+          }}
+        >
           <div className="hidden md:block md:w-1/2 bg-transparent" />
 
-          {/* Form container */}
           <div className="w-full md:w-1/2 flex items-center justify-center p-8 sm:p-12">
-            <div className="w-full max-w-md bg-transparent p-6 rounded-md ">
+            <div className="w-full max-w-md bg-transparent p-6 rounded-md">
               <h1 className="text-3xl font-bold text-red-600 mb-6 text-center">Create Account</h1>
 
               <form className="space-y-5" onSubmit={onFormSubmit} noValidate>
                 <input
                   type="text"
                   name="firstname"
-                  placeholder="Name"
+                  placeholder="First Name"
                   className="w-full px-4 py-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-red-500"
                   value={user.firstname}
                   onChange={(e) => setUser({ ...user, firstname: e.target.value })}
                   required
                 />
-
+                <input
+                  type="text"
+                  name="lastname"
+                  placeholder="Last Name"
+                  className="w-full px-4 py-3 rounded bg-gray-200 text-black outline-none focus:ring-2 focus:ring-red-500"
+                  value={user.lastname}
+                  onChange={(e) => setUser({ ...user, lastname: e.target.value })}
+                  required
+                />
                 <input
                   type="email"
                   name="email"
@@ -78,7 +85,6 @@ function Signup() {
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
                   required
                 />
-
                 <input
                   type="password"
                   name="password"
@@ -98,7 +104,7 @@ function Signup() {
               </form>
 
               <p className="mt-6 text-center text-sm font-semibold text-red-600">
-                Already have an account?{' '}
+                Already have an account?
                 <Link to="/login" className="text-white hover:underline ml-1">
                   Login Here
                 </Link>

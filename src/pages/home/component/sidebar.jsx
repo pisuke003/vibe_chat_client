@@ -62,8 +62,8 @@ function Sidebar({ openChat }) {
   };
 
   return (
-    <div className="w-full md:w-[30%] px-4 sm:px-5 bg-[#1f1f1f] text-white h-screen border-r border-gray-700 overflow-y-auto">
-
+    <div className="w-full lg:w-[30%]px-5 bg-[#1f1f1f] text-white h-screen border-r border-gray-700 overflow-y-auto">
+      {/* Search Input */}
       <div className="relative mb-5 w-full max-w-xl mx-auto">
         <input
           type="text"
