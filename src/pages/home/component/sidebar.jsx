@@ -7,9 +7,12 @@ import toast from 'react-hot-toast';
 function Sidebar({ openChat }) {
   const [searchKey, setSearchKey] = useState('');
   const [loadingUsers, setLoadingUsers] = useState([]);
-
   const dispatch = useDispatch();
   const { allUsers, allChats, user: loggedInUser } = useSelector((state) => state.user);
+
+  // Escape RegExp to prevent crash
+  const escapeRegExp = (string) =>
+    string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
   const startNewChat = async (searchUserId) => {
     setLoadingUsers((prev) => [...prev, searchUserId]);
@@ -19,10 +22,9 @@ function Sidebar({ openChat }) {
 
       if (response.success) {
         toast.success(response.message || 'Chat started');
-        const newChat = response.data;
-        const updatedChats = [...allChats, newChat];
+        const updatedChats = [...allChats, response.data];
         dispatch(setAllChats(updatedChats));
-        openChat(newChat);
+        openChat(response.data);
       } else {
         toast.error(response.message || 'Failed to create chat');
       }
@@ -36,19 +38,14 @@ function Sidebar({ openChat }) {
   const filteredUsers = allUsers?.filter((user) => {
     if (user._id === loggedInUser._id) return false;
 
-    const fullName = `${user.firstname} ${user.lastname}`.toLowerCase();
-    const matchesSearch = fullName.includes(searchKey.toLowerCase());
-
+    const nameMatch = user.firstname?.toLowerCase().includes(searchKey.toLowerCase());
     const hasChat = allChats?.some(
       (chat) =>
         chat.members.some((m) => m._id === loggedInUser._id) &&
         chat.members.some((m) => m._id === user._id)
     );
 
-    if (searchKey) {
-      return matchesSearch;
-    }
-    return hasChat;
+    return searchKey ? nameMatch : hasChat;
   });
 
   const openChatHandler = (userId) => {
@@ -57,15 +54,11 @@ function Sidebar({ openChat }) {
         chat.members.some((m) => m._id === loggedInUser._id) &&
         chat.members.some((m) => m._id === userId)
     );
-
-    if (chat) {
-      openChat(chat);
-    }
+    if (chat) openChat(chat);
   };
 
   return (
-   <div className="w-full lg:w-[30%]px-5 bg-[#1f1f1f] text-white h-screen border-r border-gray-700 overflow-y-auto">
-   
+    <div className="w-full lg:w-[30%] px-5 bg-[#1f1f1f] text-white h-screen border-r border-gray-700 overflow-y-auto">
       <div className="relative mb-5 w-full max-w-xl mx-auto">
         <input
           type="text"
@@ -77,7 +70,6 @@ function Sidebar({ openChat }) {
         <i className="fa fa-search absolute right-4 top-1/2 transform -translate-y-1/2 text-[20px] text-gray-400 pointer-events-none" />
       </div>
 
-
       {filteredUsers?.length > 0 ? (
         filteredUsers.map((user) => {
           const hasChat = allChats?.some(
@@ -87,14 +79,13 @@ function Sidebar({ openChat }) {
           );
 
           const hideStartButton = hasChat || loadingUsers.includes(user._id);
-
-          const fullName = `${user.firstname} ${user.lastname}`;
-          const highlightedName = searchKey
-            ? fullName.replace(
-                new RegExp(searchKey, 'i'),
-                (match) => `<mark class="bg-yellow-500 text-black px-1 rounded">${match}</mark>`
+          const highlight = searchKey && user.firstname
+            ? user.firstname.replace(
+                new RegExp(escapeRegExp(searchKey), 'i'),
+                (match) =>
+                  `<mark class="bg-yellow-500 text-black px-1 rounded">${match}</mark>`
               )
-            : fullName;
+            : user.firstname || '';
 
           return (
             <div
@@ -103,22 +94,18 @@ function Sidebar({ openChat }) {
               onClick={() => openChatHandler(user._id)}
             >
               <div className="flex items-center justify-between gap-2 flex-wrap">
-        
                 <div className="flex-shrink-0 w-[50px] h-[50px] rounded-full bg-red-600 text-white text-[22px] font-bold flex items-center justify-center select-none">
                   {user.firstname?.[0]?.toUpperCase()}
-                  {user.lastname?.[0]?.toUpperCase()}
                 </div>
 
-   
                 <div className="flex-1 px-3 min-w-0">
                   <div
                     className="text-[16px] font-bold truncate"
-                    dangerouslySetInnerHTML={{ __html: highlightedName }}
+                    dangerouslySetInnerHTML={{ __html: highlight }}
                   />
                   <div className="text-[12px] text-gray-400 truncate">{user.email}</div>
                 </div>
 
-              
                 {!hideStartButton && (
                   <div className="w-[90px] sm:w-[100px] md:w-[120px] flex-shrink-0">
                     <button
@@ -137,13 +124,12 @@ function Sidebar({ openChat }) {
           );
         })
       ) : (
-        <div className="text-center text-gray-400 py-10">No users found.</div>
+        <div className="text-center text-gray-400 py-10 bg-[#1f1f1f]">
+          No users found.
+        </div>
       )}
     </div>
   );
 }
 
 export default Sidebar;
-
-
-
