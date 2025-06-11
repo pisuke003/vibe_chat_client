@@ -36,17 +36,19 @@ function Sidebar({ openChat }) {
   const filteredUsers = allUsers?.filter((user) => {
     if (user._id === loggedInUser._id) return false;
 
-    const matchesSearch =
-      searchKey.trim().length === 0 ||
-      user.firstname.toLowerCase().includes(searchKey.toLowerCase());
-
     const hasChat = allChats?.some(
       (chat) =>
         chat.members.some((m) => m._id === loggedInUser._id) &&
         chat.members.some((m) => m._id === user._id)
     );
 
-    return matchesSearch || hasChat;
+    const isSearching = searchKey.trim().length > 0;
+    const matchesSearch =
+      user.firstname.toLowerCase().includes(searchKey.toLowerCase()) ||
+      user.lastname?.toLowerCase().includes(searchKey.toLowerCase()) ||
+      user.email?.toLowerCase().includes(searchKey.toLowerCase());
+
+    return hasChat || (isSearching && matchesSearch);
   });
 
   const openChatHandler = (selectUserId) => {
@@ -62,7 +64,7 @@ function Sidebar({ openChat }) {
   };
 
   return (
-    <div className="w-full lg:w-[30%]px-5 bg-[#1f1f1f] text-white h-screen border-r border-gray-700 overflow-y-auto">
+    <div className="w-full lg:w-[30%] px-5 bg-[#1f1f1f] text-white h-screen border-r border-gray-700 overflow-y-auto">
       {/* Search Input */}
       <div className="relative mb-5 w-full max-w-xl mx-auto">
         <input
@@ -94,7 +96,7 @@ function Sidebar({ openChat }) {
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 {/* Avatar */}
                 <div className="flex-shrink-0 w-[50px] h-[50px] rounded-full bg-red-600 text-white text-[22px] font-bold flex items-center justify-center select-none">
-                  {user.firstname?.charAt(0).toUpperCase()}
+                  {(user.firstname?.charAt(0) || '').toUpperCase() + (user.lastname?.charAt(0) || '').toUpperCase()}
                 </div>
 
                 {/* User Info */}
@@ -105,7 +107,7 @@ function Sidebar({ openChat }) {
                   <div className="text-[12px] text-gray-400 truncate">{user.email}</div>
                 </div>
 
-             
+                {/* Start Chat Button */}
                 {!hideStartButton && (
                   <div className="w-[90px] sm:w-[100px] md:w-[120px] flex-shrink-0">
                     <button
